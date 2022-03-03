@@ -1,26 +1,22 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import { useStores } from './stores';
+import { observer } from 'mobx-react-lite';
 
-function App() {
+const App = observer(() => {
+  const { ContentStore } = useStores();
+  const { contents, getContents } = ContentStore;
+
+  useEffect(() => {
+    getContents();
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {contents.map((content) => (
+        <div key={content.title}>{content.title}</div>
+      ))}
     </div>
   );
-}
+});
 
 export default App;
