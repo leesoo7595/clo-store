@@ -8,7 +8,7 @@ import ShopItemCard from '../components/ShopItemCard';
 import Searchbar from '../components/Searchbar';
 import CheckboxList from '../components/CheckboxList';
 import { Content } from '../api/types';
-import { getSearchParamKeys, removeSearchParams } from '../utils/searchParams';
+import { getSearchParamKeys } from '../utils/searchParams';
 
 const MainPage = observer(() => {
   const { ContentStore } = useStores();
