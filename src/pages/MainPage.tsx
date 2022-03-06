@@ -8,6 +8,7 @@ import ShopItemCard from '../components/ShopItemCard';
 import Searchbar from '../components/Searchbar';
 import CheckboxList from '../components/CheckboxList';
 import { Content } from '../api/types';
+import { getSearchParamKeys, removeSearchParams } from '../utils/searchParams';
 
 const MainPage = observer(() => {
   const { ContentStore } = useStores();
@@ -23,15 +24,29 @@ const MainPage = observer(() => {
   const [checkInfo, setCheckInfo] = useState(initCheckInfo);
 
   useEffect(() => {
-    getContents();
+    if (getSearchParamKeys().length > 0) {
+      getSearchParamKeys().forEach((key) => {
+        setCheckInfo((prevState) => ({
+          ...prevState,
+          [key]: true,
+        }));
+      });
+      getContentsByPricingOptions(getSearchParamKeys());
+    } else {
+      getContents();
+    }
   }, []);
 
   useEffect(() => {
-    const filteredCheckInfoList = Object.entries(checkInfo)
-      .filter(([k, v]) => v)
-      .map((check) => check[0]);
-    getContentsByPricingOptions(filteredCheckInfoList);
-  }, [checkInfo, getContentsByPricingOptions]);
+    if (!checkInfo.PAID && !checkInfo.FREE && !checkInfo.VIEW_ONLY) {
+      getContents();
+    } else {
+      const filteredCheckInfoList = Object.entries(checkInfo)
+        .filter(([k, v]) => v)
+        .map((check) => check[0]);
+      getContentsByPricingOptions(filteredCheckInfoList);
+    }
+  }, [checkInfo, getContents, getContentsByPricingOptions]);
 
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
