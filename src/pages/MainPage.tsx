@@ -1,4 +1,5 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
+import { observer } from 'mobx-react-lite';
 import { useStores } from '../stores';
 
 import Button from '@mui/material/Button';
@@ -8,38 +9,40 @@ import Searchbar from '../components/Searchbar';
 import CheckboxList from '../components/CheckboxList';
 import { Content } from '../api/types';
 
-const MainPage = () => {
+const MainPage = observer(() => {
   const { ContentStore } = useStores();
-  const { contents, getContents } = ContentStore;
+  const { contents, getContents, getContentsByPricingOptions } = ContentStore;
 
-  const [input, setInput] = useState('');
-  const [checkList, setCheckList] = useState({
+  const initCheckInfo = {
     PAID: false,
     FREE: false,
     VIEW_ONLY: false,
-  });
+  };
+
+  const [input, setInput] = useState('');
+  const [checkInfo, setCheckInfo] = useState(initCheckInfo);
 
   useEffect(() => {
     getContents();
   }, []);
+
+  useEffect(() => {
+    const filteredCheckInfoList = Object.entries(checkInfo)
+      .filter(([k, v]) => v)
+      .map((check) => check[0]);
+    getContentsByPricingOptions(filteredCheckInfoList);
+  }, [checkInfo, getContentsByPricingOptions]);
 
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
   };
 
   const handleChangeCheckList = (e: ChangeEvent<HTMLInputElement>) => {
-    setCheckList({
-      ...checkList,
-      [e.target.name]: e.target.checked,
-    });
+    setCheckInfo({ ...checkInfo, [e.target.name]: e.target.checked });
   };
 
   const handleClickResetCheckList = () => {
-    setCheckList({
-      PAID: false,
-      FREE: false,
-      VIEW_ONLY: false,
-    });
+    setCheckInfo(initCheckInfo);
   };
 
   return (
@@ -51,7 +54,7 @@ const MainPage = () => {
         onChange={handleChangeInput}
         value={input}
       />
-      <CheckboxList checkValues={checkList} onChange={handleChangeCheckList} />
+      <CheckboxList checkValues={checkInfo} onChange={handleChangeCheckList} />
       <Button onClick={handleClickResetCheckList}>reset</Button>
       <Grid container spacing={2}>
         {contents.map((content: Content) => (
@@ -68,6 +71,6 @@ const MainPage = () => {
       </Grid>
     </div>
   );
-};
+});
 
 export default MainPage;
