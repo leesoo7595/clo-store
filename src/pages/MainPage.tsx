@@ -58,6 +58,7 @@ const MainPage = observer(() => {
 
   const handleClickResetCheckList = () => {
     setCheckInfo(initCheckInfo);
+    setInput('');
   };
 
   return (

@@ -15,7 +15,7 @@ class ContentStore {
   getContents = async () => {
     removeSearchParams();
     const contents = await getContentList();
-    this.contents = [...contents];
+    this.setContents(contents);
   };
 
   getContentsByPricingOptions = async (options: string[]) => {
@@ -30,11 +30,15 @@ class ContentStore {
     const pricingOptions = options.map(
       (option) => PricingOption[option as keyof typeof PricingOption]
     );
-    this.contents = [
-      ...contents.filter((content) =>
+    this.setContents(
+      contents.filter((content) =>
         pricingOptions.includes(content.pricingOption)
-      ),
-    ];
+      )
+    );
+  };
+
+  setContents = (contents: Content[]) => {
+    this.contents = [...contents];
   };
 }
 
