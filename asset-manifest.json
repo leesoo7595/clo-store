@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/clo-store/static/js/main.b51c075b.js",
+    "main.js": "/clo-store/static/js/main.619672ee.js",
     "index.html": "/clo-store/index.html",
-    "main.b51c075b.js.map": "/clo-store/static/js/main.b51c075b.js.map"
+    "main.619672ee.js.map": "/clo-store/static/js/main.619672ee.js.map"
   },
   "entrypoints": [
-    "static/js/main.b51c075b.js"
+    "static/js/main.619672ee.js"
   ]
 }
